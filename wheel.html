@@ -341,8 +341,7 @@
             angle = ((angle % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
             spinning = false;
             const idx = getIdxAt(angle);
-            document.getElementById("resultRank").innerHTML =
-              RANK_LABELS[currentPrizeIdx];
+            document.getElementById("resultRank").innerHTML = "";
             document.getElementById("resultName").textContent = items[idx];
             document.getElementById("spinBtn").disabled = false;
             donePrizes.push(currentPrizeIdx);
