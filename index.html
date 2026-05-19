@@ -287,11 +287,7 @@
                 ? " active"
                 : "");
           chip.innerHTML =
-            (donePrizes.includes(i) ? "&#10003; " : "") +
-            RANK_LABELS[i].replace(/&#\d+;/g, (m) =>
-              String.fromCodePoint(parseInt(m.slice(2, -1))),
-            ) +
-            (p ? ` (${p})` : "");
+            (donePrizes.includes(i) ? "&#10003; " : "") + p;
           if (!donePrizes.includes(i))
             chip.onclick = () => {
               currentPrizeIdx = i;
