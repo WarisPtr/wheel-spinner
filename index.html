@@ -15,59 +15,25 @@
         background: #f5f5f0;
         display: flex;
         justify-content: center;
-        padding: 32px 16px;
+        padding: 16px;
         min-height: 100vh;
       }
       .wrap {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 18px;
-        max-width: 480px;
+        gap: 16px;
+        max-width: 640px;
         width: 100%;
-      }
-      h1 {
-        font-size: 18px;
-        font-weight: 500;
-        color: #1a1a1a;
-      }
-      .prize-row {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-      .prize-chip {
-        font-size: 12px;
-        padding: 4px 12px;
-        border-radius: 999px;
-        border: 0.5px solid #ccc;
-        background: #fff;
-        color: #555;
-        cursor: pointer;
-        transition: all 0.15s;
-        white-space: nowrap;
-      }
-      .prize-chip.active {
-        background: #1a1a1a;
-        color: #fff;
-        border-color: transparent;
-        font-weight: 500;
-      }
-      .prize-chip.done {
-        background: #d4f0e0;
-        color: #1a7a45;
-        border-color: transparent;
-        cursor: default;
       }
       .canvas-wrap {
         position: relative;
-        width: 300px;
-        height: 300px;
+        width: 580px;
+        height: 580px;
       }
       .needle-wrap {
         position: absolute;
-        top: -8px;
+        top: -12px;
         left: 50%;
         transform: translateX(-50%);
         z-index: 10;
@@ -75,9 +41,9 @@
       .needle-body {
         width: 0;
         height: 0;
-        border-left: 10px solid transparent;
-        border-right: 10px solid transparent;
-        border-top: 28px solid #1a1a1a;
+        border-left: 15px solid transparent;
+        border-right: 15px solid transparent;
+        border-top: 42px solid #1a1a1a;
         margin: 0 auto;
       }
       .center-dot {
@@ -85,8 +51,8 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 44px;
-        height: 44px;
+        width: 60px;
+        height: 60px;
         border-radius: 50%;
         background: #fff;
         cursor: pointer;
@@ -98,23 +64,16 @@
       }
       .result-area {
         text-align: center;
-        min-height: 60px;
+        min-height: 50px;
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 4px;
-      }
-      .result-rank {
-        font-size: 12px;
-        color: #888;
-        min-height: 18px;
       }
       .result-name {
-        font-size: 28px;
+        font-size: 30px;
         font-weight: 500;
         color: #1a1a1a;
-        min-height: 36px;
+        min-height: 38px;
       }
       .btn-row {
         display: flex;
@@ -122,7 +81,7 @@
       }
       button {
         font-size: 13px;
-        padding: 7px 20px;
+        padding: 8px 22px;
         cursor: pointer;
         border-radius: 8px;
         border: 0.5px solid #ccc;
@@ -151,6 +110,62 @@
         cursor: not-allowed;
         transform: none;
       }
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+      }
+      .overlay.show {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .popup {
+        background: #fff;
+        border-radius: 14px;
+        padding: 28px 28px 22px;
+        max-width: 320px;
+        width: 90%;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.14);
+        transform: scale(0.95);
+        transition: transform 0.2s;
+      }
+      .overlay.show .popup {
+        transform: scale(1);
+      }
+      .popup-title {
+        font-size: 15px;
+        font-weight: 500;
+        color: #1a1a1a;
+      }
+      .popup-winner {
+        font-size: 24px;
+        font-weight: 500;
+        color: #1a1a1a;
+        text-align: center;
+        padding: 8px 0;
+      }
+      .popup-body {
+        font-size: 13px;
+        color: #555;
+        line-height: 1.6;
+      }
+      .popup-btns {
+        display: flex;
+        gap: 8px;
+      }
+      .popup-btns button {
+        flex: 1;
+      }
       .no-config {
         font-size: 13px;
         color: #aaa;
@@ -160,28 +175,32 @@
   </head>
   <body>
     <div class="wrap">
-      <h1>&#127381; วงล้อ Deep & Harmonicare IVF Clinic</h1>
-
-      <div class="prize-row" id="prizeRow"></div>
-
       <div class="canvas-wrap">
         <div class="needle-wrap"><div class="needle-body"></div></div>
-        <canvas id="wc" width="300" height="300"></canvas>
+        <canvas id="wc" width="580" height="580"></canvas>
         <div class="center-dot" id="centerBtn"></div>
       </div>
-
       <div class="result-area">
-        <div class="result-rank" id="resultRank"></div>
         <div class="result-name" id="resultName">—</div>
       </div>
-
       <div class="btn-row">
         <button class="primary" id="spinBtn">&#8635; หมุน</button>
-        <button id="nextBtn" style="display: none">รางวัลถัดไป &#8594;</button>
+        <button id="nextBtn" style="display: none">ถัดไป &#8594;</button>
       </div>
-
       <div class="no-config" id="noConfig" style="display: none">
         ยังไม่ได้ตั้งค่า — เปิด admin.html ก่อนนะครับ
+      </div>
+    </div>
+
+    <div class="overlay" id="overlay">
+      <div class="popup">
+        <div class="popup-title" id="popupTitle"></div>
+        <div class="popup-winner" id="popupWinner"></div>
+        <div class="popup-body">ต้องการเอาชื่อนี้ออกจากวงล้อไหม?</div>
+        <div class="popup-btns">
+          <button onclick="popupAnswer(false)">ไม่เอาออก</button>
+          <button class="primary" onclick="popupAnswer(true)">เอาออก</button>
+        </div>
       </div>
     </div>
 
@@ -208,34 +227,36 @@
         "#791F1F",
         "#444441",
       ];
-      const RANK_LABELS = [
-        "&#127881; รางวัลที่ 1",
-        "&#127882; รางวัลที่ 2",
-        "&#127883; รางวัลที่ 3",
-      ];
+      const PRIZE_ORDER = [2, 1, 0]; // 3→2→1
+      const PRIZE_LABELS = ["รางวัลที่ 1", "รางวัลที่ 2", "รางวัลที่ 3"];
 
       let items = JSON.parse(localStorage.getItem("wheelItems") || "[]");
       let prizes = JSON.parse(
         localStorage.getItem("wheelPrizes") || '["","",""]',
       );
-      let donePrizes = [];
-      let currentPrizeIdx = 0;
+
+      // รายชื่อที่ถูกล็อกไว้ (forcedResult) สำหรับรางวัลที่มีการกรอก
+      const lockedNames = prizes.filter((p) => p && p.trim());
+
+      let queuePos = 0;
+      let lastWinnerName = "";
+      let lastWinnerItemIdx = -1;
       let angle = 0,
         spinning = false;
 
       const canvas = document.getElementById("wc");
       const ctx = canvas.getContext("2d");
+      const CX = 290,
+        CY = 290,
+        R = 278;
 
       function color(i) {
         return { fill: FILLS[i % FILLS.length], text: TEXTS[i % TEXTS.length] };
       }
 
       function draw(a) {
-        const cx = 150,
-          cy = 150,
-          r = 148,
-          n = items.length;
-        ctx.clearRect(0, 0, 300, 300);
+        const n = items.length;
+        ctx.clearRect(0, 0, 580, 580);
         if (!n) return;
         const sl = (Math.PI * 2) / n;
         items.forEach((item, i) => {
@@ -243,8 +264,8 @@
             e = s + sl,
             c = color(i);
           ctx.beginPath();
-          ctx.moveTo(cx, cy);
-          ctx.arc(cx, cy, r, s, e);
+          ctx.moveTo(CX, CY);
+          ctx.arc(CX, CY, R, s, e);
           ctx.closePath();
           ctx.fillStyle = c.fill;
           ctx.fill();
@@ -252,16 +273,16 @@
           ctx.lineWidth = 2;
           ctx.stroke();
           ctx.save();
-          ctx.translate(cx, cy);
+          ctx.translate(CX, CY);
           ctx.rotate(s + sl / 2);
           ctx.textAlign = "right";
           ctx.fillStyle = c.text;
-          ctx.font = `500 ${Math.min(13, 100 / Math.max(item.length, 3))}px sans-serif`;
-          ctx.fillText(item, r - 10, 5);
+          ctx.font = `500 ${Math.min(16, 150 / Math.max(item.length, 3))}px sans-serif`;
+          ctx.fillText(item, R - 16, 6);
           ctx.restore();
         });
         ctx.beginPath();
-        ctx.arc(cx, cy, 22, 0, Math.PI * 2);
+        ctx.arc(CX, CY, 32, 0, Math.PI * 2);
         ctx.fillStyle = "#fff";
         ctx.fill();
       }
@@ -273,57 +294,48 @@
         return Math.floor(rel / sl) % items.length;
       }
 
-      function renderPrizeRow() {
-        const row = document.getElementById("prizeRow");
-        row.innerHTML = "";
-        prizes.forEach((p, i) => {
-          if (!p) return;
-          const chip = document.createElement("div");
-          chip.className =
-            "prize-chip" +
-            (donePrizes.includes(i)
-              ? " done"
-              : i === currentPrizeIdx
-                ? " active"
-                : "");
-          chip.innerHTML =
-            (donePrizes.includes(i) ? "&#10003; " : "") + p;
-          if (!donePrizes.includes(i))
-            chip.onclick = () => {
-              currentPrizeIdx = i;
-              renderPrizeRow();
-            };
-          row.appendChild(chip);
-        });
+      // หา index ในวงล้อที่จะใช้สุ่ม โดยตัดคนที่ถูกล็อกออก
+      function pickRandomExcludingLocked() {
+        const available = items
+          .map((name, i) => ({ name, i }))
+          .filter(({ name }) => !lockedNames.includes(name));
+        if (!available.length) return Math.floor(Math.random() * items.length); // fallback
+        return available[Math.floor(Math.random() * available.length)].i;
       }
 
       function spin() {
-        if (spinning || items.length < 1) return;
-        const target = prizes[currentPrizeIdx];
-        const forcedIdx = target ? items.indexOf(target) : -1;
-        if (target && forcedIdx === -1) {
-          alert(`"${target}" ไม่มีในวงล้อ กรุณาตรวจสอบ admin.html`);
+        if (spinning || items.length < 1 || queuePos >= PRIZE_ORDER.length)
           return;
+        const prizeIdx = PRIZE_ORDER[queuePos];
+        const target = prizes[prizeIdx] ? prizes[prizeIdx].trim() : "";
+        let forcedIdx = -1;
+
+        if (target) {
+          // ล็อกผล
+          forcedIdx = items.indexOf(target);
+          if (forcedIdx === -1) {
+            alert(`"${target}" ไม่มีในวงล้อแล้ว อาจถูกเอาออกก่อนหน้า`);
+            return;
+          }
+        } else {
+          // สุ่ม แต่ห้ามได้คนที่ล็อกไว้สำหรับรางวัลอื่น
+          forcedIdx = pickRandomExcludingLocked();
         }
+
         spinning = true;
         document.getElementById("spinBtn").disabled = true;
         document.getElementById("nextBtn").style.display = "none";
         document.getElementById("resultName").textContent = "—";
-        document.getElementById("resultRank").innerHTML = "";
 
         const startAngle = angle;
-        let finalAngle;
-        if (forcedIdx >= 0) {
-          const sl = (Math.PI * 2) / items.length;
-          const base = -Math.PI / 2 - (forcedIdx * sl + sl / 2);
-          finalAngle = base + (6 + Math.floor(Math.random() * 4)) * Math.PI * 2;
-        } else {
-          finalAngle = startAngle + (5 + Math.random() * 5) * Math.PI * 2;
-        }
-
-        const duration = 3500;
+        const sl = (Math.PI * 2) / items.length;
+        const base = -Math.PI / 2 - (forcedIdx * sl + sl / 2);
+        const finalAngle =
+          base + (6 + Math.floor(Math.random() * 4)) * Math.PI * 2;
         const diff = finalAngle - startAngle;
         const start = performance.now();
+        const duration = 3600;
+
         function easeOut(t) {
           return 1 - Math.pow(1 - t, 3.5);
         }
@@ -337,41 +349,44 @@
             angle = ((angle % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
             spinning = false;
             const idx = getIdxAt(angle);
-            document.getElementById("resultRank").innerHTML = "";
-            document.getElementById("resultName").textContent = items[idx];
+            lastWinnerName = items[idx];
+            lastWinnerItemIdx = idx;
+            document.getElementById("resultName").textContent = lastWinnerName;
             document.getElementById("spinBtn").disabled = false;
-            donePrizes.push(currentPrizeIdx);
-
-            // ลบคน/รายการที่ถูกรางวัลออกจากวงล้อ
-            items.splice(idx, 1);
-            localStorage.setItem('wheelItems', JSON.stringify(items));
-
-            // ถ้ายังเหลือ item ให้วาดใหม่
-            if (items.length > 0) {
-              draw(angle);
-            } else {
-              ctx.clearRect(0, 0, 300, 300);
-            }
-
-            const remaining = prizes
-              .map((p, i) => (p ? i : -1))
-              .filter((i) => i >= 0 && !donePrizes.includes(i));
-            if (remaining.length > 0) {
-              currentPrizeIdx = remaining[0];
-              document.getElementById("nextBtn").style.display = "";
-            }
-            renderPrizeRow();
+            showPopup(prizeIdx, lastWinnerName);
           }
         }
         requestAnimationFrame(frame);
       }
 
+      function showPopup(prizeIdx, name) {
+        document.getElementById("popupTitle").textContent =
+          PRIZE_LABELS[prizeIdx];
+        document.getElementById("popupWinner").textContent = name;
+        document.getElementById("overlay").classList.add("show");
+      }
+
+      function popupAnswer(remove) {
+        document.getElementById("overlay").classList.remove("show");
+        if (remove && lastWinnerItemIdx >= 0) {
+          // ถ้าเอาออก ให้เอาออกจาก lockedNames ด้วยถ้ามี
+          const removedName = items[lastWinnerItemIdx];
+          const li = lockedNames.indexOf(removedName);
+          if (li >= 0) lockedNames.splice(li, 1);
+          items.splice(lastWinnerItemIdx, 1);
+          draw(angle);
+        }
+        lastWinnerItemIdx = -1;
+        queuePos++;
+        if (queuePos < PRIZE_ORDER.length && items.length >= 1) {
+          document.getElementById("nextBtn").style.display = "";
+        }
+      }
+
       document.getElementById("nextBtn").addEventListener("click", () => {
         document.getElementById("resultName").textContent = "—";
-        document.getElementById("resultRank").innerHTML = "";
         document.getElementById("nextBtn").style.display = "none";
       });
-
       document.getElementById("spinBtn").addEventListener("click", spin);
       document.getElementById("centerBtn").addEventListener("click", spin);
 
@@ -379,9 +394,6 @@
         document.getElementById("noConfig").style.display = "";
         document.getElementById("spinBtn").disabled = true;
       } else {
-        currentPrizeIdx = prizes.findIndex((p) => p);
-        if (currentPrizeIdx === -1) currentPrizeIdx = 0;
-        renderPrizeRow();
         draw(angle);
       }
     </script>
