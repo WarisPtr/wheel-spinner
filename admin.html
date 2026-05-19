@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ตั้งค่ารางวัล</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: sans-serif;
+        background: #f5f5f0;
+        display: flex;
+        justify-content: center;
+        padding: 40px 16px;
+        min-height: 100vh;
+      }
+      .card {
+        background: #fff;
+        border-radius: 12px;
+        border: 0.5px solid #ddd;
+        padding: 28px 28px;
+        width: 100%;
+        max-width: 400px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      h1 {
+        font-size: 17px;
+        font-weight: 500;
+        color: #1a1a1a;
+      }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      label {
+        font-size: 12px;
+        color: #888;
+      }
+      .rank {
+        font-size: 13px;
+        font-weight: 500;
+        color: #1a1a1a;
+        margin-bottom: 2px;
+      }
+      input[type="text"] {
+        font-size: 14px;
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 0.5px solid #ccc;
+        background: #fff;
+        color: #1a1a1a;
+        width: 100%;
+        outline: none;
+        transition: border-color 0.15s;
+      }
+      input[type="text"]:focus {
+        border-color: #888;
+      }
+      .divider {
+        border: none;
+        border-top: 0.5px solid #eee;
+      }
+      .btn-row {
+        display: flex;
+        gap: 8px;
+      }
+      button {
+        font-size: 13px;
+        padding: 8px 20px;
+        cursor: pointer;
+        border-radius: 8px;
+        border: 0.5px solid #ccc;
+        background: #fff;
+        color: #1a1a1a;
+        transition:
+          background 0.15s,
+          transform 0.1s;
+        flex: 1;
+      }
+      button:hover {
+        background: #f0f0ec;
+      }
+      button:active {
+        transform: scale(0.97);
+      }
+      button.primary {
+        background: #1a1a1a;
+        color: #fff;
+        border-color: transparent;
+      }
+      button.primary:hover {
+        background: #333;
+      }
+      .toast {
+        font-size: 12px;
+        text-align: center;
+        color: #1a7a45;
+        background: #d4f0e0;
+        border-radius: 8px;
+        padding: 8px;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .items-section {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .items-label {
+        font-size: 12px;
+        color: #888;
+      }
+      .items-row {
+        display: flex;
+        gap: 6px;
+      }
+      .items-row input {
+        flex: 1;
+      }
+      .items-list {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .item-row {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        font-size: 13px;
+        color: #555;
+      }
+      .item-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #ccc;
+        flex-shrink: 0;
+      }
+      .item-name {
+        flex: 1;
+      }
+      .item-rm {
+        cursor: pointer;
+        font-size: 16px;
+        color: #bbb;
+        line-height: 1;
+      }
+      .item-rm:hover {
+        color: #e24b4a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>&#9998; ตั้งค่าวงล้อ</h1>
+
+      <div class="items-section">
+        <span class="items-label">ตัวเลือกในวงล้อ</span>
+        <div class="items-row">
+          <input
+            type="text"
+            id="newItem"
+            placeholder="เพิ่มตัวเลือก..."
+            maxlength="20"
+          />
+          <button onclick="addItem()" style="flex: 0; padding: 8px 14px">
+            +
+          </button>
+        </div>
+        <div class="items-list" id="itemsList"></div>
+      </div>
+
+      <hr class="divider" />
+
+      <div style="display: flex; flex-direction: column; gap: 14px">
+        <div class="field">
+          <span class="rank">&#127881; รางวัลที่ 1</span>
+          <input type="text" id="prize1" placeholder="ชื่อรางวัลที่ 1..." />
+        </div>
+        <div class="field">
+          <span class="rank">&#127882; รางวัลที่ 2</span>
+          <input type="text" id="prize2" placeholder="ชื่อรางวัลที่ 2..." />
+        </div>
+        <div class="field">
+          <span class="rank">&#127883; รางวัลที่ 3</span>
+          <input type="text" id="prize3" placeholder="ชื่อรางวัลที่ 3..." />
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button onclick="clearPrizes()">ล้างรางวัล</button>
+        <button class="primary" onclick="save()">&#10003; บันทึก</button>
+      </div>
+      <div class="toast" id="toast">บันทึกแล้ว!</div>
+    </div>
+
+    <script>
+      let items = JSON.parse(
+        localStorage.getItem("wheelItems") ||
+          '["ข้าวผัด","ก๋วยเตี๋ยว","ส้มตำ","ต้มยำ","ชานม","กาแฟ","มะม่วง","ข้าวมันไก่"]',
+      );
+      const prizes = JSON.parse(
+        localStorage.getItem("wheelPrizes") || '["","",""]',
+      );
+
+      document.getElementById("prize1").value = prizes[0] || "";
+      document.getElementById("prize2").value = prizes[1] || "";
+      document.getElementById("prize3").value = prizes[2] || "";
+
+      function renderItems() {
+        const el = document.getElementById("itemsList");
+        el.innerHTML = "";
+        items.forEach((item, i) => {
+          const row = document.createElement("div");
+          row.className = "item-row";
+          row.innerHTML = `<div class="item-dot"></div><div class="item-name">${item}</div><span class="item-rm" onclick="removeItem(${i})">&#215;</span>`;
+          el.appendChild(row);
+        });
+      }
+
+      function addItem() {
+        const inp = document.getElementById("newItem");
+        const v = inp.value.trim();
+        if (!v || items.includes(v)) {
+          inp.focus();
+          return;
+        }
+        items.push(v);
+        inp.value = "";
+        renderItems();
+      }
+
+      function removeItem(i) {
+        items.splice(i, 1);
+        renderItems();
+      }
+
+      document.getElementById("newItem").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") addItem();
+      });
+
+      function clearPrizes() {
+        document.getElementById("prize1").value = "";
+        document.getElementById("prize2").value = "";
+        document.getElementById("prize3").value = "";
+      }
+
+      function save() {
+        const prizes = [
+          document.getElementById("prize1").value.trim(),
+          document.getElementById("prize2").value.trim(),
+          document.getElementById("prize3").value.trim(),
+        ];
+        localStorage.setItem("wheelItems", JSON.stringify(items));
+        localStorage.setItem("wheelPrizes", JSON.stringify(prizes));
+        const toast = document.getElementById("toast");
+        toast.style.opacity = 1;
+        setTimeout(() => (toast.style.opacity = 0), 2000);
+      }
+
+      renderItems();
+    </script>
+  </body>
+</html>
